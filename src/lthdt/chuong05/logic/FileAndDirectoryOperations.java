@@ -5,8 +5,16 @@
  */
 package lthdt.chuong05.logic;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -70,6 +78,53 @@ public class FileAndDirectoryOperations {
         File[] sub = content.listFiles();
         for(int i = 0; i < sub.length; i++){
             getContentRecursively(folder +File.separator + sub[i].getName());
+        }  
+    }
+    // Thao tac 6: Doc file van ban
+    public String readTextFile(String filename){
+        StringBuilder content = new StringBuilder();
+        
+        try {
+            //Mo file
+            FileReader fr = new FileReader(filename);
+            //Dung bo dem 
+            BufferedReader br = new BufferedReader(fr);
+            
+            String line = null;
+            while((line = br.readLine()) != null){
+                content.append(line);
+                content.append("\n");
+            }
+            
+            //Dong file 
+            br.close();
+            fr.close();
+        } catch (FileNotFoundException ex) {
+            return "Khong tim thay file " + filename;
+        } catch (IOException ex) {
+            return "Khong the doc file " + filename;
         }
+        
+        return content.toString();
+    }
+    
+    //Thao tac 7: Luu tap tin van ban
+    public boolean writeTextFile(String filename, String content){
+        boolean flag = true; //luu thanh cong
+        try {
+            //Mo file
+            FileWriter fw = new FileWriter(filename);
+            //Su dung buffer
+            BufferedWriter bw = new BufferedWriter(fw);
+            //Ghi ra file 
+            bw.write(content);
+            //Dong file
+            bw.flush();
+            bw.close();
+            fw.close();
+        } catch (IOException ex) {
+            return false;
+        }
+        return flag;
     }
 }
